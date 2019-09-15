@@ -12,6 +12,11 @@ defmodule RoverTest do
     assert state == %Rover{x: 1, y: 4, direction: :N}
   end
 
+  test "handle_cast :go_backward should return updated state" do
+    {:noreply, state} = Rover.handle_cast(:go_backward, %Rover{x: 1, y: 3, direction: :N})
+    assert state == %Rover{x: 1, y: 2, direction: :N}
+  end
+
   test "handle_cast :rotate_left should return updated state" do
     {:noreply, state} = Rover.handle_cast(:rotate_left, %Rover{x: 1, y: 3, direction: :N})
     assert state == %Rover{x: 1, y: 3, direction: :W}

@@ -25,6 +25,10 @@ defmodule Rover do
     GenServer.cast(RegistryHelper.create_key(name), :go_forward)
   end
 
+  def go_backward(name) do
+    GenServer.cast(RegistryHelper.create_key(name), :go_forward)
+  end
+
   def rotate_left(name) do
     GenServer.cast(RegistryHelper.create_key(name), :rotate_left)
   end
@@ -32,6 +36,11 @@ defmodule Rover do
   def rotate_right(name) do
     GenServer.cast(RegistryHelper.create_key(name), :rotate_right)
   end
+
+  def send_command(name, :F), do: go_forward(name)
+  def send_command(name, :B), do: go_backward(name)
+  def send_command(name, :L), do: rotate_left(name)
+  def send_command(name, :R), do: rotate_right(name)
 
   def handle_call(:get_state, _from, state) do
 	  {:reply, {:ok, {state.x, state.y, state.direction}}, state}
@@ -44,6 +53,17 @@ defmodule Rover do
               :E -> %Rover{state | x: rem(state.x + 1, @world_width)}
               :W -> %Rover{state | x: rem(state.x - 1 + @world_width, @world_width)}
 	  end
+
+    {:noreply, new_state}
+  end
+
+  def handle_cast(:go_backward, state) do
+	  new_state = case state.direction do
+                  :N -> %Rover{state | y: rem(state.y - 1 + @world_height, @world_height)}
+                  :S -> %Rover{state | y: rem(state.y + 1, @world_height)}
+                  :E -> %Rover{state | x: rem(state.x - 1 + @world_width, @world_width)}
+                  :W -> %Rover{state | x: rem(state.x + 1, @world_width)}
+	              end
 
     {:noreply, new_state}
   end
