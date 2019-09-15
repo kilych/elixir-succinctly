@@ -54,6 +54,8 @@ defmodule Rover do
               :W -> %Rover{state | x: rem(state.x - 1 + @world_width, @world_width)}
 	  end
 
+    WorldMap.update_rover(new_state.name, new_state.x, new_state.y)
+
     {:noreply, new_state}
   end
 
@@ -64,6 +66,8 @@ defmodule Rover do
                   :E -> %Rover{state | x: rem(state.x - 1 + @world_width, @world_width)}
                   :W -> %Rover{state | x: rem(state.x + 1, @world_width)}
 	              end
+
+    WorldMap.update_rover(new_state.name, new_state.x, new_state.y)
 
     {:noreply, new_state}
   end
